@@ -1,0 +1,98 @@
+<div class="messages">
+  <p-messages severity="info">
+    <ng-template pTemplate>
+      <img src="../../../assets/img/pharmacy.png" width="32" />
+      <div class="ml-12" style="margin-left: 20px">
+        Aşağıdaki tablodan
+        <b>
+          {{ currentDate | date : "dd.MM.yyyy" }} -
+          {{ nextDate | date : "dd.MM.yyyy" }}
+        </b>
+        tarihleri arasında Bursa ilindeki
+        <u><b>nöbetçi eczane</b></u> bilgilerine ulaşabilirsiniz.
+      </div>
+    </ng-template>
+  </p-messages>
+</div>
+
+<div class="dropdown" *ngIf="pharmacyList">
+  <p-dropdown
+    [options]="cities"
+    placeholder="Lütfen İlçe Seçiniz"
+    [(ngModel)]="selectedCity"
+    (ngModelChange)="getPharmacy($event)"
+  >
+  </p-dropdown>
+  <p-button
+    label="En Yakın 3 Eczaneyi Getir"
+    icon="pi pi-map-marker"
+    [outlined]="false"
+    [style]="{ 'margin-left': '2px' }"
+    severity="danger"
+    (click)="getNearestPharmacy()"
+  ></p-button>
+</div>
+
+<div class="card" *ngIf="pharmacyList">
+  <p-table
+    [value]="pharmacyList"
+    [paginator]="true"
+    [rows]="rows"
+    [first]="first"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ width: '100%' }"
+    currentPageReportTemplate="{totalRecords} kayıttan {first} - {last} arası gösteriliyor"
+    (onPage)="pageChange($event)"
+    [rowsPerPageOptions]="[5, 10, 15, 20, 25, 50]"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 15%">Eczane Adı</th>
+        <th style="width: 30%">Adres</th>
+        <th style="width: 15%">Telefon</th>
+        <th style="width: 20%">Nöbet Aralığı</th>
+        <th style="width: 20%">Haritada Gör</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-pharmacy>
+      <tr>
+        <td>{{ pharmacy.eczane }}</td>
+        <td>
+          {{ pharmacy.adres }} <br />
+          {{ pharmacy.adres_tarifi }}
+        </td>
+        <td>{{ pharmacy.tel }}</td>
+        <td>
+          {{ pharmacy.baslangic | date : "dd.MM.yyyy HH:mm" }} <br />
+          {{ pharmacy.bitis | date : "dd.MM.yyyy HH:mm" }}
+        </td>
+        <td>
+          <img
+            src="../../../assets/img/maps.png"
+            width="128"
+            (click)="
+              openDialog(
+                pharmacy.enlem,
+                pharmacy.boylam,
+                pharmacy.eczane,
+                pharmacy.tel
+              )
+            "
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<div style="margin-top: 20px">
+  <p-dialog
+    header="Harita Görünümü"
+    [(visible)]="showDialog"
+    (onHide)="closeDialog()"
+    [modal]="true"
+    styleClass="active"
+  >
+    <div id="map" #mapDiv></div>
+  </p-dialog>
+</div>

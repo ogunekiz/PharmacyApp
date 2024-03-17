@@ -1,0 +1,35 @@
+#map {
+  height: 60vh;
+  width: 170vh;
+}
+
+@media (max-width: 768px) {
+  #map {
+    height: 50vh;
+    width: 150vh;
+  }
+}
+
+@media (max-width: 576px) {
+  #map {
+    height: 50vh;
+    width: 50vh;
+  }
+}
+
+.card {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 20px;
+}
+
+.messages {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 0.5px;
+}
+
+.dropdown {
+  margin-left: 10px;
+}
+
